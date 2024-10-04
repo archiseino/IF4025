@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Real-Time CPU Usage</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+  <body>
+    <h1>Real-Time CPU Usage</h1>
+    <canvas id="cpuChart" width="400" height="200"></canvas>
+
+    <script>
+      var ctx = document.getElementById("cpuChart").getContext("2d");
+      var cpuChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: [],
+          datasets: [
+            {
+              label: "CPU Usage (%)",
+              data: [],
+              borderColor: "rgba(75, 192, 192, 1)",
+              borderWidth: 2,
+              fill: false,
+            },
+            {
+              label: "Disk Usaged (D: Drive)",
+              data: [],
+              borderColor: "rgba(6, 89, 43, 0.3)",
+              borderWidth: 2,
+              fill: false,
+            },
+            {
+              label: "Packets Sends",
+              data: [],
+              borderColor: "rgba(31, 95, 186, 0.8)",
+              borderWidth: 2,
+              fill: false,
+            },
+          ],
+        },
+        options: {
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+            },
+          },
+        },
+      });
+
+      function updateChart() {
+        fetch("/data")
+          .then((response) => response.json())
+          .then((data) => {
+            console.log(data);
+            const timestamps = data.map((item) =>
+              new Date(item.timestamp * 1000).toLocaleTimeString()
+            );
+            // Getting the data and convert to corresponding array of cpu, disk and network
+            const cpuUsages = data.map((item) => item.cpu);
+            const diskUsage = data.map((item) => item.disk.disk_percent);
+            const networkUsage = data.map((item) => item.net.bytes_sent_mb);
+
+            cpuChart.data.labels = timestamps;
+            cpuChart.data.datasets[0].data = cpuUsages;
+            cpuChart.data.datasets[1].data = diskUsage;
+            cpuChart.data.datasets[2].data = networkUsage;
+
+            cpuChart.update();
+          });
+      }
+
+      setInterval(updateChart, 5000); // Update setiap 5 detik
+    </script>
+  </body>
+</html>
