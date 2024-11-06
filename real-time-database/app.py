@@ -12,7 +12,7 @@ firebase_admin.initialize_app(cred, {
 })
 
 # Referensi ke node 'cpu_usage' di Firebase
-ref = db.reference('cpu_usage')
+ref = db.reference('cpu_usage') 
 
 @app.route('/')
 def index():
