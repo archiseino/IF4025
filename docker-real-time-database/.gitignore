@@ -1,0 +1,6 @@
+.vercel
+node_modules
+.vercel
+__pycache__
+.vercelignore
+pc-cpu-monitoring-firebase-adminsdk-2yfd5-cf147c47f5.json

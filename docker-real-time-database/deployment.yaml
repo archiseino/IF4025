@@ -1,0 +1,19 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: performance-monitoring
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: performance-monitoring
+  template:
+    metadata:
+      labels:
+        app: performance-monitoring
+    spec:
+      containers:
+        - name: performance-monitoring
+          image: archise1/performance-monitoring:v1
+          ports:
+            - containerPort: 5000
